@@ -1,0 +1,5 @@
+{
+    "connectiondb": "mongodb://localhost/mean-lab",
+    "apiUrl": "http://localhost:4000",
+    "secret": "1234"
+}
