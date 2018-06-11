@@ -1,0 +1,11 @@
+<form (submit)="addTask($event)">
+    <input type="text" placeholder="Add new Task" name="title" [(ngModel)]="title">
+</form>
+<ul>
+  <li *ngFor="let task of tasks">
+    <app-task [task]="task" (complete)="onComplete($event)"
+      (delete)="onDelete($event)"
+    ></app-task>
+  </li>
+</ul>
+
