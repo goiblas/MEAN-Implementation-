@@ -1,8 +1,6 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-const config = require('./config.json');
 const app = express();
 
 
@@ -20,27 +18,21 @@ app.use(express.json());
 // envio de datos desde formulario
 app.use(express.urlencoded({ extended: false }));
 
-// use JWT auth to secure the api, the token can be passed in the authorization header or querystring
-// app.use(expressJwt({
-//     secret: config.secret,
-//     getToken: function (req) {
-//         if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-//             return req.headers.authorization.split(' ')[1];
-//         } else if (req.query && req.query.token) {
-//             return req.query.token;
-//         }
-//         return null;
-//     }
-// }).unless({ path: ['/users/authenticate', '/users/register'] }));
+const secure = require('./services/secure.service');
 
 // router
 const viewRouter = require('./controllers/view.controller');
-const usersApiRouter = require('./controllers/users.api.controller');
+const usersApiRouter = require('./controllers/users.controller');
 const taskApiRouter = require('./controllers/api/tasks.controller');
+const privateTaskApiRouter = require('./controllers/api/privTasks.controller');
+const userRouter = require('./controllers/users.controller');
+
 app.use(viewRouter);
 app.use('/api', usersApiRouter);
 app.use('/api/tasks', taskApiRouter);
-
+app.use('/api/prt', secure.secureRouter);
+app.use('/api/prt/tasks', privateTaskApiRouter);
+app.use('/users', userRouter);
 
 // start server
 const port = process.env.NODE_ENV === 'production' ? 80 : 4000;
